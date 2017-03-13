@@ -155,49 +155,55 @@ class PoleServer_handler implements Runnable {
     double calculate_action(double angle, double angleDot, double pos, double posDot) {
       double action = 0;
        // if (angle > 0 && angleDiff < 0) {
-       if (angle > 0) {
-           if (angle > 65 * 0.01745) {
-               action = 10;
-           } else if (angle > 60 * 0.01745) {
-               action = 8;
-           } else if (angle > 50 * 0.01745) {
-               action = 7.5;
-           } else if (angle > 30 * 0.01745) {
-               action = 4;
-           } else if (angle > 20 * 0.01745) {
-               action = 2;
-           } else if (angle > 10 * 0.01745) {
-               action = 0.5;
-           } else if(angle >5*0.01745){
-               action = 0.2;
-           } else if(angle >2*0.01745){
-               action = 0.1;
-           } else {
-               action = 0;
-           }
-       } else if (angle < 0) {
-           if (angle < -65 * 0.01745) {
-               action = -10;
-           } else if (angle < -60 * 0.01745) {
-               action = -8;
-           } else if (angle < -50 * 0.01745) {
-               action = -7.5;
-           } else if (angle < -30 * 0.01745) {
-               action = -4;
-           } else if (angle < -20 * 0.01745) {
-               action = -2;
-           } else if (angle < -10 * 0.01745) {
-               action = -0.5;
-           } else if(angle <-5*0.01745){
-               action = -0.2;
-           } else if(angle <-2*0.01745){
-               action = -0.1;
-           } else {
-               action = 0;
-           }
-       } else {
-           action = 0.;
-       }
+       // if (angle > 0) {
+       //     if (angle > 65 * 0.01745) {
+       //         action = 10;
+       //     } else if (angle > 60 * 0.01745) {
+       //         action = 8;
+       //     } else if (angle > 50 * 0.01745) {
+       //         action = 7.5;
+       //     } else if (angle > 30 * 0.01745) {
+       //         action = 4;
+       //     } else if (angle > 20 * 0.01745) {
+       //         action = 2;
+       //     } else if (angle > 10 * 0.01745) {
+       //         action = 0.5;
+       //     } else if(angle >5*0.01745){
+       //         action = 0.2;
+       //     } else if(angle >2*0.01745){
+       //         action = 0.1;
+       //     } else {
+       //         action = 0;
+       //     }
+       // } else if (angle < 0) {
+       //     if (angle < -65 * 0.01745) {
+       //         action = -10;
+       //     } else if (angle < -60 * 0.01745) {
+       //         action = -8;
+       //     } else if (angle < -50 * 0.01745) {
+       //         action = -7.5;
+       //     } else if (angle < -30 * 0.01745) {
+       //         action = -4;
+       //     } else if (angle < -20 * 0.01745) {
+       //         action = -2;
+       //     } else if (angle < -10 * 0.01745) {
+       //         action = -0.5;
+       //     } else if(angle <-5*0.01745){
+       //         action = -0.2;
+       //     } else if(angle <-2*0.01745){
+       //         action = -0.1;
+       //     } else {
+       //         action = 0;
+       //     }
+       // } else {
+       //     action = 0.;
+       // }
+      //4.188*angle + 4.537*angleDot + .08725*posDot
+       // action = 0; -.0275*pos - .1545*posDot + 
+      // if((angle < .001) && (angleDot < .001))
+      //   action = -.001745*pos;
+      // else
+      action = 4.188*angle + 4.537*angleDot + .08725*posDot;
        return action;
    }
 
