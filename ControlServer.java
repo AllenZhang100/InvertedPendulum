@@ -61,6 +61,7 @@ class PoleServer_handler implements Runnable {
         t.start();
     }
     double angle, angleDot, pos, posDot, action = 0, i = 0;
+    double targpos = 2;
 
     /**
      * This method receives the pole positions and calculates the updated value
@@ -200,10 +201,10 @@ class PoleServer_handler implements Runnable {
        // }
       //4.188*angle + 4.537*angleDot + .08725*posDot
        // action = 0; -.0275*pos - .1545*posDot + 
-      // if((angle < .001) && (angleDot < .001))
-      //   action = -.001745*pos;
+      // if((Math.abs(angle) < .0001) && (Math.abs(angleDot) < .0001))
+      //   action = -1.745*pos;
       // else
-      action = 4.188*angle + 4.537*angleDot + .08725*posDot;
+      action = 3.5*angle + 4.5*angleDot + 4.5*posDot + .75*(pos - targpos);
        return action;
    }
 
