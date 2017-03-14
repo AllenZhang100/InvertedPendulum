@@ -34,7 +34,7 @@ public class ControlServer {
  */
 class PoleServer_handler implements Runnable {
     // Set the number of poles
-    private static final int NUM_POLES = 1;
+    private static final int NUM_POLES = 2;
 
     static ServerSocket providerSocket;
     Socket connection = null;
@@ -61,7 +61,8 @@ class PoleServer_handler implements Runnable {
         t.start();
     }
     double angle, angleDot, pos, posDot, action = 0, i = 0;
-    double targpos = 2;
+    double targpos = 0;
+    double followpos = 0;
 
     /**
      * This method receives the pole positions and calculates the updated value
@@ -102,10 +103,16 @@ class PoleServer_handler implements Runnable {
                   angleDot = data[i*4+1];
                   pos = data[i*4+2];
                   posDot = data[i*4+3];
+                  if(i==0)
+                    followpos = pos;
                   
                   System.out.println("server < pole["+i+"]: "+angle+"  "
                       +angleDot+"  "+pos+"  "+posDot);
-                  actions[i] = calculate_action(angle, angleDot, pos, posDot);
+                  if(i==0)
+                  actions[i] = calculate_action(angle, angleDot, pos, posDot,false);
+                  else
+                  actions[i] = calculate_action(angle, angleDot, pos, posDot,true);
+
                 }
 
                 sendMessage_doubleArray(actions);
@@ -153,58 +160,14 @@ class PoleServer_handler implements Runnable {
     // TODO: Current implementation assumes that each pole is controlled
     // independently. The interface needs to be changed if the control of one
     // pendulum needs sensing data from other pendulums.
-    double calculate_action(double angle, double angleDot, double pos, double posDot) {
+    double calculate_action(double angle, double angleDot, double pos, double posDot, boolean follow) {
       double action = 0;
-       // if (angle > 0 && angleDiff < 0) {
-       // if (angle > 0) {
-       //     if (angle > 65 * 0.01745) {
-       //         action = 10;
-       //     } else if (angle > 60 * 0.01745) {
-       //         action = 8;
-       //     } else if (angle > 50 * 0.01745) {
-       //         action = 7.5;
-       //     } else if (angle > 30 * 0.01745) {
-       //         action = 4;
-       //     } else if (angle > 20 * 0.01745) {
-       //         action = 2;
-       //     } else if (angle > 10 * 0.01745) {
-       //         action = 0.5;
-       //     } else if(angle >5*0.01745){
-       //         action = 0.2;
-       //     } else if(angle >2*0.01745){
-       //         action = 0.1;
-       //     } else {
-       //         action = 0;
-       //     }
-       // } else if (angle < 0) {
-       //     if (angle < -65 * 0.01745) {
-       //         action = -10;
-       //     } else if (angle < -60 * 0.01745) {
-       //         action = -8;
-       //     } else if (angle < -50 * 0.01745) {
-       //         action = -7.5;
-       //     } else if (angle < -30 * 0.01745) {
-       //         action = -4;
-       //     } else if (angle < -20 * 0.01745) {
-       //         action = -2;
-       //     } else if (angle < -10 * 0.01745) {
-       //         action = -0.5;
-       //     } else if(angle <-5*0.01745){
-       //         action = -0.2;
-       //     } else if(angle <-2*0.01745){
-       //         action = -0.1;
-       //     } else {
-       //         action = 0;
-       //     }
-       // } else {
-       //     action = 0.;
-       // }
-      //4.188*angle + 4.537*angleDot + .08725*posDot
-       // action = 0; -.0275*pos - .1545*posDot + 
-      // if((Math.abs(angle) < .0001) && (Math.abs(angleDot) < .0001))
-      //   action = -1.745*pos;
-      // else
+      if(!follow)
       action = 3.5*angle + 4.5*angleDot + 4.5*posDot + .75*(pos - targpos);
+    else {
+      action = 3.5*angle + 4.5*angleDot + 4.5*posDot + .75*(followpos - targpos);
+
+    }
        return action;
    }
 

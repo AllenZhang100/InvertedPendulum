@@ -1,0 +1,58 @@
+	For the design of our controller, we created a control algorithm
+that consisted of a linear combination of the four variables.
+Through the trial and error method, we obtained a working control
+algorithm: 
+action = 3.5*angle + 4.5*angleDot + 4.5*posDot + .75*(pos - targpos),
+where targpos is the target position of the cart.  We noticed that
+increasing the constant multiplier of (pos-targpos) would get us to
+the target position faster, but would also cause the system to 
+become more unstable in that the angular velocity and velocity of
+the cart would sometimes get very high.  Likewise, decreasing 
+the constant would get the cart to the target position more slowly,
+but in turn would have a more stable system.
+
+	For our test cases, we executed and passed the default test
+cases; that is, getting the cart to balance without a target
+position, getting the cart to balance and move towards the
+target trajectory of 2 from an initial position of -2, and
+getting two carts to balance with the condition that one cart
+is following the other.  Aside from the default test cases,
+we tested trajectory movements from 2 to -2, 3 to 0, and 0 to 3.
+
+	Files:
+
+	Client.java:
+
+		We did not change anything in this file other than the
+		simSpeed and sensorSamplingRate.  We did this so that
+		we could observe the end behavior of our cart when it
+		was balanced.
+
+	Physics.java:
+
+		We only changed the lines necessary for the configuration
+		of two carts as specified in the README file.
+
+	ControlServer.java:
+
+		For this class we maintained a global variable followpos
+		that would store the position of the first cart.  This was
+		for the second cart's control algorithm.
+		We also maintained a global variable targpos that stored
+		the target position of the first cart.  Changing this 
+		variable would change the target trajectory of the first cart.
+		For the calclate_actions method, we added a boolean variable
+		that allowed us to determine whether the cart was the first
+		cart or the one that is following the first cart.  The only
+		deviation between the two control algorithms is that
+		the cart that is following would use the pos (given by followpos)
+		of the first cart.  
+		Thus, the control algorithm of the first cart is:
+	    action = 3.5*angle + 4.5*angleDot + 4.5*posDot + .75*(pos - targpos)
+	    and the control aogorithm of the following cart is:
+	    action = 3.5*angle + 4.5*angleDot + 4.5*posDot + .75*(followpos - targpos)
+
+	Our code can be run using make server and make client.  To change the target position
+	of the cart to a specified value, modify targpos in ControlServer.java to that value.  
+	For example, if you want the cart to move to position 2, changed targpos to 2.
+	
